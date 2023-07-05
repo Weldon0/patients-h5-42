@@ -1,21 +1,18 @@
 import './assets/main.css'
+import 'vant/lib/index.css'
 
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import persi from 'pinia-plugin-persistedstate'
+import { ConfigProvider } from 'vant'
 
 import App from '@/App.vue'
 import router from './router'
+import pinia from './stores'
 
 const app = createApp(App)
 
 // 创建pinia实例
-const pinia = createPinia()
-
-// 持久化的插件是注册给pinia的
-pinia.use(persi)
-
 app.use(pinia)
 app.use(router)
+app.use(ConfigProvider)
 // 所有的注册都要放到mount之前
 app.mount('#app')
