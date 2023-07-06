@@ -13,7 +13,7 @@ const agree = ref(false)
     ></cp-nav-bar>
     <div class="login-head">
       <h3>密码登录</h3>
-      <a href="javascript:;">
+      <a href="javascript:">
         <span>短信验证码登录</span>
         <van-icon name="arrow"></van-icon>
       </a>
