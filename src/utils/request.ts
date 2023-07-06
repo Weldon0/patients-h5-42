@@ -1,6 +1,8 @@
 import router from '@/router'
 import { useUserStore } from '@/stores'
+import type { User } from '@/types/user'
 import axios, { AxiosError } from 'axios'
+import type { Method } from 'axios'
 import { showToast } from 'vant'
 
 const baseURL = 'https://consult-api.itheima.net/'
@@ -50,17 +52,34 @@ instance.interceptors.response.use(
   }
 )
 
+type Data<T> = {
+  code: number
+  message: string
+  data: T
+}
+
 // 基于instance封装一个request请求
-const request = (url: string, method: string = 'get', submitData?: object) => {
+const request = <T>(
+  url: string,
+  method: Method = 'get',
+  submitData?: object
+) => {
   // 为了继承泛型
-  return instance.request({
+  return instance.request<T, Data<T>>({
     url,
     method,
     [method.toLowerCase() === 'get' ? 'params' : 'data']: submitData
     // 处理参数
   })
 }
+// 调用接口requset的时候，会把当前接口后端返回的数据的ts类型作为泛型传入
+// request<User>('/login', 'POST', { mobile: '' }).then((res) => {
+//   // res
+// })
 
-// request('/login', 'POST', { mobile: '' })
+// request<List>('/getList', 'POST', { mobile: '' }).then((res) => {
+//   // res
+// })
+
 // baseURL其他地方可能会用到
 export { request, baseURL }

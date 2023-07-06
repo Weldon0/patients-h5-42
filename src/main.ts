@@ -1,8 +1,9 @@
-import './assets/main.css'
+import './assets/main.scss'
 import 'vant/lib/index.css'
 
 import { createApp } from 'vue'
 import { ConfigProvider } from 'vant'
+import 'virtual:svg-icons-register'
 
 import App from '@/App.vue'
 import router from './router'
