@@ -4,13 +4,13 @@ import axios, { AxiosError } from 'axios'
 import { showToast } from 'vant'
 
 const baseURL = 'https://consult-api.itheima.net/'
-const request = axios.create({
+const instance = axios.create({
   baseURL: baseURL,
   timeout: 10000
 })
 
 // 请求拦截器 >> 注入token
-request.interceptors.request.use(
+instance.interceptors.request.use(
   (config) => {
     // token注入，判断是否有token
     const userStore = useUserStore()
@@ -27,7 +27,7 @@ request.interceptors.request.use(
 )
 
 // 响应拦截器
-request.interceptors.response.use(
+instance.interceptors.response.use(
   (response) => {
     // 判断后端的code是否为10000
     if (response.data.code !== 10000) {
@@ -50,4 +50,17 @@ request.interceptors.response.use(
   }
 )
 
-export default request
+// 基于instance封装一个request请求
+const request = (url: string, method: string = 'get', submitData?: object) => {
+  // 为了继承泛型
+  return instance.request({
+    url,
+    method,
+    [method.toLowerCase() === 'get' ? 'params' : 'data']: submitData
+    // 处理参数
+  })
+}
+
+// request('/login', 'POST', { mobile: '' })
+// baseURL其他地方可能会用到
+export { request, baseURL }
