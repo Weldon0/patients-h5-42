@@ -2,10 +2,11 @@
 import { ref } from 'vue'
 import { showToast } from 'vant'
 import { useRouter } from 'vue-router'
+import type { FormInstance } from 'vant'
 
-import { mobileRules, passwordRules } from '@/utils/rules'
+import { mobileRules, passwordRules, codeRules } from '@/utils/rules'
 import { useUserStore } from '@/stores'
-import { loginApi } from '@/service/user'
+import { loginApi, loginByMobile, sendCode } from '@/service/user'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -14,6 +15,10 @@ const agree = ref<boolean>(false)
 const show = ref<boolean>(false)
 const mobile = ref<string>('13230000100')
 const password = ref<string>('abc12345')
+const code = ref('')
+const isPass = ref(true) // 是否为密码登录场景
+const form = ref<FormInstance>()
+const showCountDown = ref(false)
 
 const login = async () => {
   // 只有点击了同意协议，才可以进行登录
@@ -22,16 +27,23 @@ const login = async () => {
     showToast('请同意协议')
     return
   }
-  const res = await loginApi(mobile.value, password.value)
-  console.log(res)
+  // 如果当前是密码的场景，调用账号密码的接口，否则调用验证码接口
+  const res = isPass.value
+    ? await loginApi(mobile.value, password.value)
+    : await loginByMobile(mobile.value, code.value)
   userStore.setUser(res.data)
-  router.push({
-    name: 'user',
-    params: {
-      id: '23'
-    }
-  })
+  router.push('/user')
   showToast('登录成功')
+}
+
+// 发送验证码的方法
+const send = async () => {
+  // 我们还要对手机号校验
+  // 获取form实例，调用validate
+  await form.value?.validate('mobile')
+  await sendCode(mobile.value, 'login')
+  showToast('验证码发送成功')
+  showCountDown.value = true
 }
 </script>
 
@@ -43,21 +55,23 @@ const login = async () => {
       @click-right="$router.push('/register')"
     />
     <div class="login-head">
-      <h3>密码登录</h3>
-      <a href="javascript:">
-        <span>短信验证码登录</span>
+      <h3>{{ isPass ? '密码登录' : '验证码登录' }}</h3>
+      <a href="javascript:" @click="isPass = !isPass">
+        <span>{{ !isPass ? '密码登录' : '验证码登录' }}</span>
         <van-icon name="arrow"></van-icon>
       </a>
     </div>
     <!-- form 表单 -->
-    <van-form autocomplete="off" @submit="login">
+    <van-form ref="form" autocomplete="off" @submit="login">
       <van-field
         placeholder="请输入手机号"
         v-model="mobile"
         :rules="mobileRules"
+        name="mobile"
         type="tel"
       ></van-field>
       <van-field
+        v-if="isPass"
         v-model="password"
         placeholder="请输入密码"
         :type="show ? 'text' : 'password'"
@@ -68,6 +82,30 @@ const login = async () => {
             @click="show = !show"
             :name="`login-eye-${show ? 'on' : 'off'}`"
           />
+        </template>
+      </van-field>
+      <van-field
+        v-model="code"
+        :rules="codeRules"
+        placeholder="输入验证码"
+        v-else
+      >
+        <template #button>
+          <span v-if="!showCountDown" class="btn-send" @click="send"
+            >发送验证码</span
+          >
+          <van-count-down
+            @finish="showCountDown = false"
+            v-else
+            :time="60 * 1000"
+            format="ss"
+          >
+            <template #default="timeData">
+              <span class="btn-send active"
+                >{{ timeData.seconds }}s之后重新发送</span
+              >
+            </template>
+          </van-count-down>
         </template>
       </van-field>
       <div class="cp-cell">
@@ -144,6 +182,12 @@ const login = async () => {
         color: var(--cp-primary);
         padding: 0 5px;
       }
+    }
+  }
+  .btn-send {
+    color: var(--cp-primary);
+    &.active {
+      color: rgba(22, 194, 163, 0.5);
     }
   }
 }
