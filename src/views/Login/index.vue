@@ -1,7 +1,38 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { showToast } from 'vant'
+import { useRouter } from 'vue-router'
 
-const agree = ref(false)
+import { mobileRules, passwordRules } from '@/utils/rules'
+import { useUserStore } from '@/stores'
+import { loginApi } from '@/service/user'
+
+const userStore = useUserStore()
+const router = useRouter()
+
+const agree = ref<boolean>(false)
+const show = ref<boolean>(false)
+const mobile = ref<string>('13230000100')
+const password = ref<string>('abc12345')
+
+const login = async () => {
+  // 只有点击了同意协议，才可以进行登录
+  if (!agree.value) {
+    // 全部的请提示
+    showToast('请同意协议')
+    return
+  }
+  const res = await loginApi(mobile.value, password.value)
+  console.log(res)
+  userStore.setUser(res.data)
+  router.push({
+    name: 'user',
+    params: {
+      id: '23'
+    }
+  })
+  showToast('登录成功')
+}
 </script>
 
 <template>
@@ -10,7 +41,7 @@ const agree = ref(false)
       title="登录"
       right-text="注册"
       @click-right="$router.push('/register')"
-    ></cp-nav-bar>
+    />
     <div class="login-head">
       <h3>密码登录</h3>
       <a href="javascript:">
@@ -18,13 +49,27 @@ const agree = ref(false)
         <van-icon name="arrow"></van-icon>
       </a>
     </div>
-    <svg aria-hidden="true">
-      <use href="#icon-login-eye-off"></use>
-    </svg>
     <!-- form 表单 -->
-    <van-form autocomplete="off">
-      <van-field placeholder="请输入手机号" type="tel"></van-field>
-      <van-field placeholder="请输入密码" type="password"></van-field>
+    <van-form autocomplete="off" @submit="login">
+      <van-field
+        placeholder="请输入手机号"
+        v-model="mobile"
+        :rules="mobileRules"
+        type="tel"
+      ></van-field>
+      <van-field
+        v-model="password"
+        placeholder="请输入密码"
+        :type="show ? 'text' : 'password'"
+        :rules="passwordRules"
+      >
+        <template #button>
+          <CpIcon
+            @click="show = !show"
+            :name="`login-eye-${show ? 'on' : 'off'}`"
+          />
+        </template>
+      </van-field>
       <div class="cp-cell">
         <van-checkbox v-model="agree">
           <span>我已同意</span>
@@ -34,7 +79,9 @@ const agree = ref(false)
         </van-checkbox>
       </div>
       <div class="cp-cell">
-        <van-button block round type="primary">登 录</van-button>
+        <van-button block round type="primary" native-type="submit"
+          >登 录</van-button
+        >
       </div>
       <div class="cp-cell">
         <a href="javascript:;">忘记密码？</a>
