@@ -2646,6 +2646,16 @@ husky@^8.0.0:
   resolved "https://registry.npmmirror.com/husky/-/husky-8.0.3.tgz#4936d7212e46d1dea28fef29bb3a108872cd9184"
   integrity sha512-+dQSyqPh4x1hlO1swXBiNb2HzTDN1I2IGLQx1GrBuiqFJfoMrnZWwVmatvSiO+Iz8fBUnf+lekwNo4c2LlXItg==
 
+id-validator@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.npmmirror.com/id-validator/-/id-validator-1.3.0.tgz#5e0546803c0d17f4680c31f2c8c8194c582d695a"
+  integrity sha512-f/5FfaCBqdnLmDN3mYDHhZIHlnV6Xk6M6Ef2INT9Ng/IEvwMQYRIgj12ANdvUoaWz3o7SRb39z/fFC4dB64gHA==
+
+idcard@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.npmmirror.com/idcard/-/idcard-4.1.1.tgz#d1302df4ab868bd2d5646764bfa9199351a57a3d"
+  integrity sha512-IfuWI1bI/IohizSggg8xxXdJ3qID2yW6eUlHf3XEmB0+iBEab8BQky9lU2UVLv7BjmDxYbA8kjXTR3G3l8yj5g==
+
 ignore@^5.2.0:
   version "5.2.4"
   resolved "https://registry.npmmirror.com/ignore/-/ignore-5.2.4.tgz#a291c0c6178ff1b960befe47fcdec301674a6324"
