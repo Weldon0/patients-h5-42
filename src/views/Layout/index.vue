@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router' // hook
+// 如何获取路由参数
 
 const router = useRouter()
-console.log(router)
 </script>
 
 <template>
