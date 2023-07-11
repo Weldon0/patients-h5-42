@@ -3,8 +3,12 @@ import KnowledgeList from '@/views/Home/components/KnowledgeList.vue'
 import type { KnowledgeType } from '@/types/consult'
 import { ref } from 'vue'
 import FollowDoctor from '@/views/Home/components/FollowDoctor.vue'
+import { useConsultStore } from '@/stores'
+import { ConsultType } from '@/enum'
 
 const active = ref<KnowledgeType>('recommend') // 推荐标签
+
+const consultStore = useConsultStore()
 </script>
 
 <template>
@@ -21,21 +25,33 @@ const active = ref<KnowledgeType>('recommend') // 推荐标签
     <div class="home-navs">
       <van-row>
         <van-col span="8">
-          <router-link to="/" class="nav">
+          <router-link
+            @click="consultStore.setType(ConsultType.Doctor)"
+            to="/"
+            class="nav"
+          >
             <cp-icon name="home-doctor"></cp-icon>
             <p class="title">问医生</p>
             <p class="desc">按科室查问医生</p>
           </router-link>
         </van-col>
         <van-col span="8">
-          <router-link to="/consult/fast" class="nav">
+          <router-link
+            @click="consultStore.setType(ConsultType.Fast)"
+            to="/consult/fast"
+            class="nav"
+          >
             <cp-icon name="home-graphic"></cp-icon>
             <p class="title">极速问诊</p>
             <p class="desc">20s医生极速回复</p>
           </router-link>
         </van-col>
         <van-col span="8">
-          <router-link to="/" class="nav">
+          <router-link
+            @click="consultStore.setType(ConsultType.Medication)"
+            to="/"
+            class="nav"
+          >
             <cp-icon name="home-prescribe"></cp-icon>
             <p class="title">开药门诊</p>
             <p class="desc">线上买药更方便</p>

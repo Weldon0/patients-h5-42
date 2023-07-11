@@ -19,4 +19,9 @@ export enum IllnessTime {
   More
 }
 
+export enum IllnessType {
+  SANJIA = 1,
+  PUTONG = 0
+}
+
 // console.log(ConsultType.Fast) 2
