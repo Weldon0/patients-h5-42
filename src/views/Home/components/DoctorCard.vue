@@ -1,8 +1,12 @@
 <script lang="ts" setup>
 import type { Doctor } from '@/types/consult'
+import { useFollow } from '@/hooks'
 defineProps<{
   item: Doctor
 }>()
+
+// vue3 自定义hooks、 逻辑复用 >> vue2中的mixins  >> 数据来源不清晰
+const { loading, follow } = useFollow('doc')
 </script>
 <template>
   <div class="doctor-card">
@@ -10,7 +14,13 @@ defineProps<{
     <p class="name">{{ item.name }}</p>
     <p class="van-ellipsis">{{ item.hospitalName }} {{ item.depName }}</p>
     <p>{{ item.positionalTitles }}</p>
-    <van-button round size="small" type="primary">
+    <van-button
+      :loading="loading"
+      round
+      size="small"
+      type="primary"
+      @click="follow(item)"
+    >
       {{ item.likeFlag === 1 ? '已关注' : '+ 关注' }}
     </van-button>
   </div>

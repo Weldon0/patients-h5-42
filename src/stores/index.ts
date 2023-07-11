@@ -9,3 +9,4 @@ export default pinia
 
 // 把user模块里面的内容获取到之后进行了导出
 export * from './modules/user'
+export * from './modules/consult'

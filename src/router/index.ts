@@ -1,5 +1,11 @@
 import { useUserStore } from '@/stores'
 import { createRouter, createWebHistory } from 'vue-router'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
+NProgress.configure({
+  showSpinner: false // 是否展示加载中的loading小圆圈
+})
 
 const router = createRouter({
   history: createWebHistory(),
@@ -59,11 +65,18 @@ const router = createRouter({
 // 全局前置守卫的拦截
 // 如果没有token同时要去需要权限的界面的话，重定向到login
 router.beforeEach((to) => {
-  document.title = `优医问诊-${to.meta.title}`
+  // 路由跳转之前开启滚动条
+  NProgress.start()
   const userStore = useUserStore()
   const whiteList = ['/login']
   if (!userStore.user?.token && !whiteList.includes(to.path)) return '/login'
   // 其他情况不做任何处理，可以理解为放行
+})
+
+router.afterEach((to) => {
+  // 路由跳转之后关闭滚动条
+  document.title = `优医问诊-${to.meta.title}`
+  NProgress.done()
 })
 
 export default router

@@ -1,6 +1,7 @@
 import { request } from '@/utils/request'
 import type {
   DoctorPage,
+  FollowType,
   KnowledgePage,
   KnowledgeParams,
   PageParams
@@ -15,3 +16,6 @@ export const getKnowledgePage = (params: KnowledgeParams) =>
 
 export const getDoctorPage = (params: PageParams) =>
   request<DoctorPage>('/home/page/doc', 'get', params)
+
+export const followDoctor = (id: number | string, type: FollowType = 'doc') =>
+  request('/like', 'post', { id, type })
