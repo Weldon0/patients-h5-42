@@ -10,6 +10,7 @@ import CpNavBar from '@/components/cp-nav-bar.vue'
 import type { Patient, PatientList } from '@/types/user'
 import { showConfirmDialog, showToast } from 'vant'
 import Validator from 'id-validator'
+import CpRadioBtn from '@/components/CpRadioBtn.vue'
 
 const patientList = ref<PatientList>([])
 const loadData = async () => {
