@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { getAllDep } from '@/service/consult'
+import { useConsultStore } from '@/stores'
 import type { TopDep } from '@/types/consult'
 import { computed } from 'vue'
 import { ref } from 'vue'
 
 const active = ref(0)
+const consultStore = useConsultStore()
 
 // 请求分类数据
 const allDep = ref<TopDep[]>([])
@@ -37,6 +39,7 @@ const subDep = computed(() => {
           to="/consult/illness"
           v-for="item in subDep"
           :key="item.id"
+          @click="consultStore.setDepId(item.id)"
         >
           {{ item.name }}</router-link
         >

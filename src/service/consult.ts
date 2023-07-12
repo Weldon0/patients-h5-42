@@ -2,6 +2,7 @@ import { request } from '@/utils/request'
 import type {
   DoctorPage,
   FollowType,
+  Image,
   KnowledgePage,
   KnowledgeParams,
   PageParams,
@@ -23,3 +24,13 @@ export const followDoctor = (id: number | string, type: FollowType = 'doc') =>
 
 // 获取分类数据
 export const getAllDep = () => request<TopDep[]>('/dep/all')
+
+// 上传图片
+export const uploadImg = (file: File) => {
+  // 构建一个formData对象
+  const fd = new FormData()
+
+  fd.append('file', file)
+
+  return request<Image>('/upload', 'post', fd)
+}

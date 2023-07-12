@@ -11,7 +11,6 @@ defineProps<{
 const emits = defineEmits<{
   'update:modelValue': [value: string | number]
 }>()
-const model = defineModel()
 </script>
 
 <template>

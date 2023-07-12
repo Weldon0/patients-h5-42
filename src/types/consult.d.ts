@@ -133,3 +133,8 @@ export type TopDep = SubDep & {
   // 二级科室数组
   child: SubDep[]
 }
+
+export type ConsultIllness = Pick<
+  PartialConsult,
+  'illnessDesc' | 'illnessTime' | 'consultFlag' | 'pictures'
+>
